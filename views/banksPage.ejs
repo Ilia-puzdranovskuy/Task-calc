@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<style>
+    table, th, td{
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+</style>
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+          <a href="#" class="brand-logo">Logo</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="/">Банки</a></li>
+            <li><a href="/calculator">Калькулятор</a></li>
+            
+          </ul>
+        </div>
+      </nav>
+ <h1>Ваші банки</h1>
+ <% if (banks.length>0){%>
+    <table>
+        <tr>
+            <th>Назва банку</th>
+            <th>Процентна ставка/%</th>
+            <th>Максимальна позика</th>
+            <th>Мінімальний перший внесок</th>
+            <th>Строк позики/місяці</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <% banks.forEach(function(item){ %>
+            <form method="POST" action="/change-bank">
+                <tr>
+                    <td><input type="text" value="<%=item.name%>" name="bankName"></td>
+                    <td><input type="number" value="<%=item.interestRate%>" name="interestRate"></td>
+                    <td><input type="number" value="<%=item.maximumLoan%>" name="maximumLoan"></td>
+                    <td><input type="number" value="<%=item.minimumDownPayment%>" name="minimumDownPayment"></td>
+                    <td><input type="number" value="<%=item.loanTerm%>" name="loanTerm"></td>
+                    <td><button type="submit" name="changeBankId" value="<%=item._id%>" >Змінити</button></td>
+            </form>
+                    <td><form method="POST" action="/delete-bank"><button type="submit" name="deleteBankId" value="<%=item._id%>" >Видалити</button></form></td>
+                </tr>
+            
+        <% }); %>
+    </table>
+      <%}else{%>
+        <h3>Додайте банк</h3>
+      <%}%>
+ <h1>Додати банк</h1>   
+ <form method="POST" action="create-bank">
+     <table>
+        <tr>
+            <th>Назва банку</th>
+            <th>Процентна ставка/%</th>
+            <th>Максимальна позика</th>
+            <th>Мінімальний перший внесок</th>
+            <th>Строк позики/місяці</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th><input type="text" placeholder="Назва банку" name="bankName"></th>
+            <th><input type="number" placeholder="Процентна ставка" name="interestRate"></th>
+            <th><input type="number" placeholder="Максимальна позика" name="maximumLoan"></th>
+            <th><input type="number" placeholder="Мінімальний перший внесок" name="minimumDownPayment"></th>
+            <th><input type="number" placeholder="Строк позики" name="loanTerm"></th>
+            <th><button type="submit">Створити</button></th>
+        </tr>
+        </table>
+     
+ </form>
+
+ </form>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            
+</body>

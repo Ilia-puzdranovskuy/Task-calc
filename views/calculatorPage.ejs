@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<head>
+   
+<style>
+    table, th, td{
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    .flex{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+</style>
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+          <a href="#" class="brand-logo">Logo</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="/">Банки</a></li>
+            <li><a href="/calculator">Калькулятор</a></li>
+            
+          </ul>
+        </div>
+      </nav>
+<div>
+    <form method="POST" action="/calculate-mortgage" class="flex" >
+        <div class="browser-default">
+            <span>Банк:</span>
+            <select name="bankId">
+            <option value="" >Виберіть банк</option>
+            <% banks.forEach(function(item){ %>
+            <option value="<%=item._id%>"><%=item.name%></option>
+            <% }); %>
+            </select>
+        </div>
+        <div> <span>Початкова позика:</span> <input type="number" name="initialLoan" ></div>
+        <div> <span>Перший внесок:</span> <input type="number" name="downPayment"></div>
+        <div><button type="submit">Обрахувати</button></div> 
+    </form>
+    
+</div>
+<% if (typeof calcResult != "string" ){%>
+    <div>
+        <h1>Рузультати розрахунку</h1>
+        <div class="flex">
+            <div>Банк: <%=calcResult.bankInf.name%></div>
+            <div>Процентна ставка: <%=calcResult.bankInf.interestRate%>%</div>
+            <div>Максимальна позика: <%=calcResult.bankInf.maximumLoan%></div>
+            <div>Мінімальний перший внесок: <%=calcResult.bankInf.minimumDownPayment%></div>
+            <div>Строк позики: <%=calcResult.bankInf.loanTerm%> місяців</div>
+        </div>
+        <div>
+            <div>Загальна сума позики: <%=calcResult.initialLoan%></div>
+            <div>Початковий внесок: <%=calcResult.downPayment.toFixed (4)%></div>
+            <div>Щомісячний платіж: <%=calcResult.mounthlyPayment.toFixed (4)%></div>
+            <div>Загальна переплата: <%=calcResult.overpayment.toFixed (4)%></div>
+            
+        
+        </div>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th>Місяць</th>
+                <th>Загальний платіж</th>
+                <th>Виплата відсотків</th>
+                <th>Баланс позики</th>
+                <th>Власний капітал</th>
+            </tr>
+            
+            <% for (var i = 1; i <=calcResult.bankInf.loanTerm;  i++ ) {  %>
+                <%let n = calcResult.downPayment+=calcResult.mounthlyPayment  %>
+                <%let h = (calcResult.initialLoan*calcResult.bankInf.interestRate/100/12) %>
+                <%let g = 0; %>
+                <%if (i>1 ){ g = ((calcResult.initialLoan-=calcResult.mounthlyPayment)*calcResult.bankInf.interestRate/100/12)} %>
+                
+                <tr>
+                    <th><%=i%></th>
+                    <th><%=calcResult.mounthlyPayment.toFixed (4)%></th>
+                    <% if (i==1 ){%>
+                    <th><%=h.toFixed (4)%></th>
+                    <%}else{%>
+                        <th><%=g.toFixed (4)%></th>
+                    <%}%>
+                    <th><%=i%></th>
+                    <% if (i==1 ){%>
+                    <th><%=(n-h).toFixed (4)%></th>
+                    <%}else{%>
+                        <th><%=(n-g-h*(i-1)).toFixed (4)%></th>
+                    <%}%>
+                </tr>
+            <% } %>
+
+        </table>
+    </div>
+    <%}else{%>
+        <h1><%=calcResult%></h1>
+<%}%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            
+</body>
